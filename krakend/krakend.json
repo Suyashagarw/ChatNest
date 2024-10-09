@@ -1,0 +1,540 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "extra_config": {
+    "auth/validator": {
+      "shared_cache_duration": 300
+    },
+    "telemetry/metrics": {
+      "collection_time": "60s",
+      "proxy_disabled": false,
+      "router_disabled": false,
+      "backend_disabled": false,
+      "endpoint_disabled": false,
+      "listen_address": ":8090"
+    },
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true,
+      "format": "default",
+      "syslog_facility": "local3"
+    },
+    "router": {
+      "auto_options": true
+    },
+    "security/cors": {
+      "allow_origins": [
+        "*"
+      ],
+      "allow_methods": [
+        "GET",
+        "HEAD",
+        "POST"
+      ],
+      "expose_headers": [
+        "Content-Length",
+        "Content-Type"
+      ],
+      "allow_headers": [
+        "Accept-Language"
+      ],
+      "max_age": "14h",
+      "allow_credentials": true,
+      "debug": false
+    }
+  },
+  "timeout": "10000ms",
+  "cache_ttl": "5s",
+  "output_encoding": "json",
+  "endpoints": [
+    {
+      "endpoint": "/v1/auth/me",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/me",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://auth-service:5005"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/me",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/me",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      },
+      "input_query_strings": [
+        "username"
+      ]
+    },
+    {
+      "endpoint": "/v1/chat/links",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/links",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/randomname",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/randomname",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/room/{id}/messages",
+      "method": "GET",
+      "output_encoding": "json-collection",
+      "backend": [
+        {
+          "url_pattern": "/room/{id}/messages",
+          "encoding": "json",
+		      "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      },
+      "input_query_strings": [
+        "offset",
+        "size"
+      ]
+    },
+    {
+      "endpoint": "/v1/chat/room/0/preload",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/room/0/preload",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/users",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/users",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      },
+      "input_query_strings": [
+        "*"
+      ]
+    },
+    {
+      "endpoint": "/v1/chat/users/online",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/users/online",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/room",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/room",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/user/{username}",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/user/{username}",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/rooms/{userId}",
+      "method": "GET",
+      "output_encoding": "json-collection",
+      "backend": [
+        {
+          "url_pattern": "/rooms/{userId}",
+          "encoding": "json",
+		  "is_collection": true,
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/room/create",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/room/create",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/chat/stream",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/stream",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://chat-ms-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/auth/login",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/login",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "extra_config": {
+            "modifier/body-generator": {
+              "template": "ewogICAgInVzZXJuYW1lIjogInt7LnJlcV9wYXJhbXMudXNlcm5hbWV9fSIsCiAgICAicGFzc3dvcmQiOiAie3sucmVxX3BhcmFtcy5wYXNzd29yZH19Igp9"
+            }
+          },
+          "host": [
+            "http://auth-service:5005"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/v1/auth/logout",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/logout",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "extra_config": {
+            "modifier/body-generator": {
+              "template": "ewogICAgInVzZXJuYW1lIjogInt7LnJlcV9wYXJhbXMudXNlcm5hbWV9fSIsCiAgICAicGFzc3dvcmQiOiAie3sucmVxX3BhcmFtcy5wYXNzd29yZH19Igp9"
+            }
+          },
+          "host": [
+            "http://auth-service:5005"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/upload",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/upload",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "extra_config": {
+            "modifier/body-generator": {
+              "template": "ewogICAgInVzZXJuYW1lIjogInt7LnJlcV9wYXJhbXMudXNlcm5hbWV9fSIsCiAgICAicGFzc3dvcmQiOiAie3sucmVxX3BhcmFtcy5wYXNzd29yZH19Igp9"
+            }
+          },
+          "host": [
+            "http://file-ms-service:5005"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "audience": [
+            "SQfDlgv1W9DiYlQlrJKAwbjqd6ybwsxW"
+          ],
+          "jwk_url": "https://1724-chat.us.auth0.com/.well-known/jwks.json",
+          "cache": true,
+          "issuer": "https://1724-chat.us.auth0.com/"
+        }
+      }
+    },
+    {
+      "endpoint": "/v1/auth/signup",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/signup",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "extra_config": {
+            "modifier/body-generator": {
+              "template": "ewogICAgInVzZXJuYW1lIjogInt7LnJlcV9wYXJhbXMudXNlcm5hbWV9fSIsCiAgICAicGFzc3dvcmQiOiAie3sucmVxX3BhcmFtcy5wYXNzd29yZH19Igp9"
+            }
+          },
+          "host": [
+            "http://auth-service:5005"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ]
+}

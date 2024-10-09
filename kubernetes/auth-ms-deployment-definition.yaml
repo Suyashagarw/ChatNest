@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-ms-deployment
+  labels:
+    app: auth-ms
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth-ms
+  template:
+    metadata:
+      labels:
+        app: auth-ms
+    spec:
+      containers:
+      - name: auth-ms
+        image: naqib/auth0:latest
+        ports:
+        - containerPort: 5005
+        resources:
+          requests:
+            cpu:  5m
+            memory: 125Mi
+          limits:
+            cpu: 10m
+            memory: 250Mi

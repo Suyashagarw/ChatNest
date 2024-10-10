@@ -1,4 +1,7 @@
-# Chat MS service
+# ChatNest
+
+## Overview
+ChatNest is a service tackles the issue of scalability in web applications. At its core, it utilizes a microservices architecture, enabling each component - authentication, chat, and file management - to scale independently. This approach is enhanced by deploying these services in Docker containers, which offers a consistent and lightweight execution environment. The orchestration of these containers is managed by Kubernetes, which automates scaling, load balancing, and system recovery, ensuring robust performance under varying loads. Additionally, the system incorporates Redis for efficient caching, reducing database load and improving response times. 
 
 Client : React frontend
 

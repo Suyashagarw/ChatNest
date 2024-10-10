@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 from flask import render_template, redirect, request, url_for, Response
 from apps.services.authentication import blueprint
@@ -126,12 +122,6 @@ def register():
 
 
     return response
-
-# Errors
-
-# @login_manager.unauthorized_handler
-# def unauthorized_handler():
-#     return redirect(url_for('authentication_blueprint.login'))
 
 
 @blueprint.errorhandler(403)

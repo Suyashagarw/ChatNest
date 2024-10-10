@@ -1,21 +1,6 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 from flask import render_template, redirect, request, url_for, Response
-# from flask_login import (
-#     current_user,
-#     login_user,
-#     logout_user
-# )
-
-# from apps import db, login_manager
 from apps.services.file_manager import blueprint
-# from apps.services.authentication.forms import LoginForm, CreateAccountForm
-# from apps.services.authentication.models import Users
-
-# from apps.services.authentication.util import verify_pass
 import logging, requests, json, os
 from auth0.authentication import GetToken, Database, Users
 from auth0.management import UsersByEmail
@@ -41,22 +26,9 @@ def file_put(file, file_name, bucket_file):
     print(file_name, bucket_file)
 
     url=api_url+bucket_file
-
-    # path = os.path.join('upload', file_name)
-    # payload = open(path,'rb')
     mime_type, _ = mimetypes.guess_type(file_name)
     app.logger.debug(mime_type)
-    
-    
-    #     if mime_type in ('image/png', 'image/jpeg', 'image/jpg'):
-    #         new_file = 'data:image/' + mime_type.split('/')[1] + ';base64, ' + base64.b64encode(file.read()).decode('utf-8')
-    #         # new_file = file
-    #     else:
-    #         new_file = file
-    # else:
-    #     return {"success": False, "msg": "File type is not supported"}
 
-    # print(file.read())
     print(url)
     # return mime_type
     if mime_type in ('text/plain', 'application/pdf', 'image/png', 'image/jpeg', 'image/jpg'):
@@ -67,7 +39,6 @@ def file_put(file, file_name, bucket_file):
     print(response.text)
     
     return url if response.status_code==200 else {"msg": "upload failed", "api_response": response.text}
-    # print(response.status_code)
 
 def file_get(file_name, bucket_file):
     print(file_name, bucket_file)
@@ -78,12 +49,6 @@ def file_get(file_name, bucket_file):
 
     if file_type=='text/plain':
         response = result.content.deode('utf8')
-    # path = os.path.join('download', file_name)
-
-    #saving the file
-    # with open(path, "wb") as file:
-    #     file.write(response.content)
-    # print(response.status_code)
     app.logger.debug(result)
     app.logger.debug(result.content)
     return response
@@ -115,11 +80,6 @@ def download_file(file_name):
 
     return jsonify({'url': api_url+bucket_file}), 200
 
-# Errors
-
-# @login_manager.unauthorized_handler
-# def unauthorized_handler():
-#     return redirect(url_for('authentication_blueprint.login'))
 
 
 @blueprint.errorhandler(403)
